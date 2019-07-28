@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Profile
+{% endblock %}
+{% block body %}
+    <div class="container" style="margin-top: 100px; margin-bottom: 100px">
+        <h1 class="text-center">Profile</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul>
+                            <li><p><strong>Username: </strong>{{ app.user.username }}</p></li>
+                            <li><p><strong>Email: </strong>{{ app.user.email }}</p></li>
+                            <li class="mt-5 mb-1"><a href="{{ path('profile_edit', {'id': app.user.id}) }}" class="btn btn-warning">Edit your profile</a></li>
+                            <li><a href="{{ path('delete_profile', {'userId': app.user.id}) }}" class="btn btn-danger">Delete your profile</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

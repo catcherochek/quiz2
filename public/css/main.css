@@ -1,0 +1,25 @@
+body, html {
+    height: 100%;
+}
+
+.bg {
+    /* The image used */
+    background-color: #013ba0;
+	
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.text-center{
+	color:black;
+}
+.text-light{
+	color:black;
+}
+ul {
+    list-style: none;
+}

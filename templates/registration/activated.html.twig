@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Congratulation{% endblock %}
+
+{% block body %}
+    <div class="container" style="margin-top: 100px; margin-bottom: 100px;">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="h3 mb-3 font-weight-normal">Congratulation!</h1>
+                <p>You can log in by clicking <a href="{{ path('app_login') }}">Link</a>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

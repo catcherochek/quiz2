@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} To do-list {% endblock %}
+
+{% block body %}
+    <div class="container" style="margin-top: 100px">
+        <div>
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+       <div class="text-center">
+           <h1>To do-list</h1>
+           <p>You have <strong>{{ app.user.tasks | length }} tasks</strong>.</p>
+       </div>
+        <div class="mb-3">
+            <a href="{{ path('task_create') }}" class="btn btn-outline-dark">
+                Add a task
+            </a>
+        </div>
+        <div class="row">
+            {% if app.user.tasks | length %}
+                {% for task in tasks %}
+                    {% if is_granted('LIST', task) %}
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                    {{ task.name }}
+                                <a href="{{ path('task_delete', {'id': task.id}) }}" class="btn btn-sm btn-outline-danger float-right">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                        <a href="{{ path('task_edit', {'id': task.id}) }}" class="btn btn-sm btn-outline-warning float-right mr-1">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                {% if task.isDone %}
+                                    <a href="{{ path('task_toggle', {'id': task.id}) }}" class="btn btn-sm btn-success float-right mr-1">
+                                        <i class="fas fa-times-circle"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('task_toggle', {'id': task.id}) }}" class="btn btn-sm btn-outline-success float-right mr-1">
+                                        <i class="fas fa-check-circle"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    {{ task.content }}
+                                </p>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>You do not have any tasks yet. </p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
