@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Bundles\MyMail;
+//use App\Bundles\MyMail;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,7 +30,7 @@ class RegisterController extends AbstractController
     {
 
         
-        $mailsender = new MyMail();
+        
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);

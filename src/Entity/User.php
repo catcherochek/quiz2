@@ -94,7 +94,12 @@ class User implements UserInterface
      * @ORM\Column(type="integer", options={"default":0})
      */
     private $validated;
-
+    
+    /**
+     * @ORM\Column(type="string", options={"default":"none"})
+     */
+    private $foto;
+    
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="user", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt" = "DESC"})
@@ -102,6 +107,22 @@ class User implements UserInterface
     private $tasks;
 
     
+    /**
+     * @return mixed
+     */
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+
+    /**
+     * @param mixed $foto
+     */
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+    }
+
     public function getValidated():?int
     {
         return $this->validated;
@@ -121,6 +142,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->validated = 0;
+        $this->foto="none";
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->roles = ["ROLE_USER"];

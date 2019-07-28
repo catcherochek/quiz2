@@ -20,6 +20,9 @@
                         <div class="form-group">
                             {{ form_row(profileForm.email) }}
                         </div>
+                        <div class="form-group">
+                            {{ form_row(profileForm.foto) }}
+                        </div>
                         <button type="submit" class="btn btn-md btn-warning">Modify</button>
                         <a href="{{ path('profile_show') }}" class="btn btn-info">Delete</a>
                         {{ form_end(profileForm) }}

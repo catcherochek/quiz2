@@ -13,6 +13,7 @@
                         <ul>
                             <li><p><strong>Username: </strong>{{ app.user.username }}</p></li>
                             <li><p><strong>Email: </strong>{{ app.user.email }}</p></li>
+							<li><p><strong>Image: </strong><img width="150px" style = "border: 1px solid black;" src="{{ asset('upload/fotos/' ~ app.user.foto) }}"/> </p></li>
                             <li class="mt-5 mb-1"><a href="{{ path('profile_edit', {'id': app.user.id}) }}" class="btn btn-warning">Edit your profile</a></li>
                             <li><a href="{{ path('delete_profile', {'userId': app.user.id}) }}" class="btn btn-danger">Delete your profile</a></li>
                         </ul>

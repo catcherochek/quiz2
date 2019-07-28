@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
@@ -30,7 +31,7 @@ class ProfileController extends AbstractController
      */
     public function show(): Response
     {
-        return $this->render('profile/show.html.twig');
+        return $this->render('profile/show.html.twig',['imgpath' =>$this->getParameter('foto_directory') ]);
     }
 
     /**
@@ -51,11 +52,32 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
-
-            $this->addFlash('success', "L'utilisateur a bien été modifié");
+            $brochureFile = $form['foto']->getData();
+            if ($brochureFile) {
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+                
+                // Move the file to the directory where brochures are stored
+                $ppaatt = $this->getParameter('foto_directory');
+                try {
+                    $brochureFile->move(
+                        $ppaatt,
+                        $newFilename
+                        );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+         $user->setFoto($newFilename);
+         $em = $this->getDoctrine()->getManager();
+         $em->flush();
+         
+            
+            
+            
+            $this->addFlash('success', "Succesfully edited");
 
             return $this->redirectToRoute('profile_show');
         }
