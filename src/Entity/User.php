@@ -142,7 +142,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->validated = 0;
-        $this->foto="none";
+        $this->foto="none.jpg";
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->roles = ["ROLE_USER"];
