@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ConfirmPasswordType;
 use App\Form\ProfileType;
-use App\Repository\UserRepository;
+use App\Form\PWDChangeFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,7 +57,9 @@ class ProfileController extends AbstractController
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+                if (isset($brochureFile)) {
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+                }
                 
                 // Move the file to the directory where brochures are stored
                 $ppaatt = $this->getParameter('foto_directory');
@@ -122,7 +124,7 @@ class ProfileController extends AbstractController
 
             $this->addFlash(
                 'warning',
-                'Mot de pass incorrect'
+                ' pass incorrect'
             );
 
             return $this->redirectToRoute('profile_request_delete');
@@ -130,6 +132,30 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/requestDeleteProfile.html.twig', [
             'confirmPasswordToDeleteProfile' => $deleteUserForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/{userId}/pwdchange", name="profile_pwdchange")
+     *
+     */
+    public function passwordchanger(
+        Request $request, $userId,
+        EntityManagerInterface $em,
+        SessionInterface $session,
+        TokenStorageInterface $tokenStorage)
+    {
+        $user = $this->getUser();
+
+        $chUserForm = $this->createForm(PWDChangeFormType::class);
+        $chUserForm->handleRequest($request);
+        if ($user->getId() == $userId) {
+            if ($chUserForm->isSubmitted() && $chUserForm->isValid()) {
+                $i2 = 0;
+            }
+        }
+        return $this->render('profile/requestPWDChangeProfile.html.twig', [
+            'ChangePass' => $chUserForm->createView(),
         ]);
     }
 
