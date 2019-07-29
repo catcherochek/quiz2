@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 /**
@@ -137,20 +138,50 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/profile/{userId}/pwdchange", name="profile_pwdchange")
-     *
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param EntityManagerInterface       $manager
      */
     public function passwordchanger(
         Request $request, $userId,
         EntityManagerInterface $em,
         SessionInterface $session,
-        TokenStorageInterface $tokenStorage)
+        TokenStorageInterface $tokenStorage,
+        UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $manager)
     {
         $user = $this->getUser();
 
         $chUserForm = $this->createForm(PWDChangeFormType::class);
         $chUserForm->handleRequest($request);
+        $vals = $chUserForm->getData();
         if ($user->getId() == $userId) {
             if ($chUserForm->isSubmitted() && $chUserForm->isValid()) {
+
+
+                if ($passwordEncoder->isPasswordValid($user,$chUserForm->get('oldpassword')->getData()))
+                {
+                  $newpass =  $chUserForm->get('newpassword')->getData();
+                  $chp2 = $request->request->get('newpassword');
+                  $user->setPassword($passwordEncoder->encodePassword(
+                        $user,
+                        $chUserForm->get('newpassword')->getData()
+                    ))
+                    ;
+                  $manager->persist($user);
+                  $manager->flush();
+                  $this->addFlash(
+                        'success',
+                        'Your account password has been changed!'
+                    );
+                    return $this->redirectToRoute('profile_show');
+                }else{
+                    $this->addFlash(
+                        'danger',
+                        'Your account password wasnt changed old pass is incorrect!'
+                    );
+
+                }
+
                 $i2 = 0;
             }
         }
