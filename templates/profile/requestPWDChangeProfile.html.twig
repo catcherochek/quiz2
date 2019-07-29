@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset request {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/log.css') }}">
+{% endblock %}
+
+{% block body %}
+    <form method="post" class="form-signin mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="h3 mb-3 font-weight-normal text-center">Password changer</h1>
+                {{ form_start(ChangePass, {'attr': {
+                    'novalidate': 'novalidate'
+                }}) }}
+
+                {{ form_label(ChangePass.oldpassword) }}
+                {{ form_widget(ChangePass.oldpassword) }}
+                {{ form_errors(ChangePass.oldpassword) }}
+
+                {{ form_label(ChangePass.newpassword.first) }}
+                {{ form_widget(ChangePass.newpassword.first) }}
+                {{ form_errors(ChangePass.newpassword.first) }}
+
+                {{ form_label(ChangePass.newpassword.second) }}
+                {{ form_widget(ChangePass.newpassword.second) }}
+                {{ form_errors(ChangePass.newpassword.second) }}
+
+                <button class="btn btn-md btn-danger mt-2" type="submit">
+                    change Passsword
+                </button>
+                {{ form_end(ChangePass) }}
+            </div>
+        </div>
+    </form>
+{% endblock %}
