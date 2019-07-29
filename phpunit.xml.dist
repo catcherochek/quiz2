@@ -12,7 +12,7 @@
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <!-- the value is the Doctrine connection string in DSN format -->
-        <env name="DATABASE_URL" value="mysql://jlbokass:dabok77@127.0.0.1/todo"/>
+        <env name="DATABASE_URL" value="mysql://root@localhost/todo"/>
     </php>
 
     <testsuites>
