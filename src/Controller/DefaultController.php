@@ -13,7 +13,7 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        $m=new MyMail();
+       // $m=new MyMail();
         return $this->render('default/index.html.twig');
     }
 }
