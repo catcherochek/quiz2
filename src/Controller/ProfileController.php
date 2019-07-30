@@ -69,11 +69,12 @@ class ProfileController extends AbstractController
                         $ppaatt,
                         $newFilename
                         );
+                    $user->setFoto($newFilename);
                 } catch (FileException $e) {
                     // ... handle exception if something happens during file upload
                 }
             }
-         $user->setFoto($newFilename);
+
          $em = $this->getDoctrine()->getManager();
          $em->flush();
          
@@ -153,20 +154,16 @@ class ProfileController extends AbstractController
 
         $chUserForm = $this->createForm(PWDChangeFormType::class);
         $chUserForm->handleRequest($request);
-        $vals = $chUserForm->getData();
         if ($user->getId() == $userId) {
             if ($chUserForm->isSubmitted() && $chUserForm->isValid()) {
 
 
                 if ($passwordEncoder->isPasswordValid($user,$chUserForm->get('oldpassword')->getData()))
                 {
-                  $newpass =  $chUserForm->get('newpassword')->getData();
-                  $chp2 = $request->request->get('newpassword');
                   $user->setPassword($passwordEncoder->encodePassword(
                         $user,
                         $chUserForm->get('newpassword')->getData()
-                    ))
-                    ;
+                  ));
                   $manager->persist($user);
                   $manager->flush();
                   $this->addFlash(
@@ -182,7 +179,6 @@ class ProfileController extends AbstractController
 
                 }
 
-                $i2 = 0;
             }
         }
         return $this->render('profile/requestPWDChangeProfile.html.twig', [

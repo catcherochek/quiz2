@@ -99,7 +99,50 @@ class User implements UserInterface
      * @ORM\Column(type="string", options={"default":"none"})
      */
     private $foto;
-    
+
+    /**
+     * @ORM\Column(type="string", options={"default":"Female"})
+     */
+    private $sex;
+
+    /**
+     * @ORM\Column(type="date", options={"default":"2000-01-01"})
+     */
+
+    private $birthdate;
+
+    /**
+     * @return mixed
+     */
+    public function getBirthdate()
+    {
+        return $this->birthdate;
+    }
+
+    /**
+     * @param mixed $birthdate
+     */
+    public function setBirthdate($birthdate): void
+    {
+        $this->birthdate = $birthdate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * @param mixed $sex
+     */
+    public function setSex($sex): void
+    {
+        $this->sex = $sex;
+    }
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="user", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt" = "DESC"})
@@ -141,6 +184,8 @@ class User implements UserInterface
 
     public function __construct()
     {
+        $this->sex = "Female";
+        $this->birthdate = new \DateTime();
         $this->validated = 0;
         $this->foto="none.jpg";
         $this->createdAt = new \DateTime();

@@ -30,6 +30,8 @@
                     <div class="col-sm-12">
                         <ul>
                             <li><p><strong>Username: </strong>{{ app.user.username }}</p></li>
+                            <li><p><strong>Birthday date: </strong>{{ app.user.birthdate|date('Y-m-d')  }}</p></li>
+                            <li><p><strong>Sex: </strong>{{ app.user.sex }}</p></li>
                             <li><p><strong>Email: </strong>{{ app.user.email }}</p></li>
 							<li><p><strong>Image: </strong><img width="150px" style = "border: 1px solid black;" src="{{ asset('upload/fotos/' ~ app.user.foto) }}"/> </p></li>
                             <li class="mt-5 mb-1"><a href="{{ path('profile_pwdchange', {'userId': app.user.id}) }}" class="btn btn-warning" style = "background-color:blue;color:white;">Change your password</a></li>

@@ -6,6 +6,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +41,20 @@ class ProfileType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid PDF document',
                     ])
                 ],
-            ]);
+            ])
+            ->add('sex', ChoiceType::class, [
+                'label' => 'Username: ',
+                'choices'  => [
+                    'Male' => 'Male',
+                    'Female' => 'Female',
+                ],
+            ])
+            ->add('birthdate', BirthdayType::class, [
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ]
+            ])
+        ;
             
     }
 

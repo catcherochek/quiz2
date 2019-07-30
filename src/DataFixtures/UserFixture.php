@@ -22,6 +22,8 @@ class UserFixture extends BaseFixture
             $user->setPassword($this->encoder->encodePassword($user, 'test123456'));
             $user->setRoles(['ROLE_USER']);
             $user->setUsername($this->faker->unique()->userName);
+            $user->setBirthdate($this->faker->unique()->date());
+            $user->setSex("Male");
         });
 
         $manager->flush();

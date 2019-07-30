@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,6 +36,18 @@ class RegistrationType extends AbstractType
                 'label' => 'Username: ',
                 'required' => true,
                 'help' => 'Will serve to identify you on the site.'
+            ])
+            ->add('sex', ChoiceType::class, [
+                'label' => 'Username: ',
+                'choices'  => [
+                    'Male' => 'Male',
+                    'Female' => 'Female',
+                ],
+            ])
+            ->add('birthdate', BirthdayType::class, [
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ]
             ])
         ;
     }
