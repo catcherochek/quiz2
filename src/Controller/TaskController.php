@@ -93,6 +93,8 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
 
+        $lid = $task->getTasksList()->getId();
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $manager->flush();
@@ -102,7 +104,7 @@ class TaskController extends AbstractController
                 'Task has been modified. '
             );
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', array('id' => $lid));
         }
 
         return $this->render('task/edit.html.twig', [
@@ -127,11 +129,13 @@ class TaskController extends AbstractController
 
         $name = $task->getName();
 
+        $lid = $task->getTasksList()->getId();
+
         $this->addFlash(
             'success',
             'Task '.$name .' have been completed. ');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list', array('id' => $lid));
     }
 
     /**
