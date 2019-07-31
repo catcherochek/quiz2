@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Create a tasklist{% endblock %}
+{% block body %}
+    <div class="container" style="margin-top: 100px; margin-bottom: 100px;">
+        <h1 class="text-center">Add a task</h1>
+        <div class="row">
+            <div class="col-12">
+                {% include 'tasklist/tasklistForm.html.twig' %}
+                <button type="submit" class="btn btn-success">add</button>
+                <a href="{{ path('tasklist') }}" class="btn btn-info">Go Back</a>
+                {{ form_end(taskForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

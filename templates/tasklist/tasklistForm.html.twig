@@ -1,0 +1,13 @@
+{{ form_start(taskForm, {
+    'attr': {
+        'novalidate': 'novalidate'
+    }
+}) }}
+
+<div class="form-group">
+    {{ form_row(taskForm.name) }}
+</div>
+
+<div class="form-group">
+    {{ form_row(taskForm.desc) }}
+</div>
