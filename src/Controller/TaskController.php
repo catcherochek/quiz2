@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\TasksList;
 use App\Form\TaskType;
-use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,35 +21,43 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks", name="task_list", methods={"GET"})
+     * @Route("/taskslistsshow/{id}", name="task_list", methods={"GET"})
      *
      * @return Response
      */
-    public function index(): Response
+    public function showdata($id): Response
     {
+        $list = $this->getList($id);
+        $tasks = $this->getTasksByListId($list->getId());
         return $this->render('task/index.html.twig', [
-            'tasks' => $this->getDoctrine()->getRepository(Task::class)->findAll(),
+            'tasks' => $tasks,
+            'list' => $list,
+
         ]);
+
     }
 
     /**
-     * @Route("/tasks/create", name="task_create")
+     * @Route("/tasks/create/{tl_id}", name="task_create")
      * @param Request $request
+     * @param TasksList $tl
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function create(Request $request, EntityManagerInterface $manager): Response
+    public function create(Request $request, EntityManagerInterface $manager, $tl_id): Response
     {
+
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
-
+        //$form->add('')
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $this->getUser();
-
+            $tlist = $this->getList($tl_id);
             $task->setUser($user);
+            $task->setTasksList($tlist);
 
             $manager->persist($task);
             $manager->flush();
@@ -59,12 +67,13 @@ class TaskController extends AbstractController
                 'The task has been added. '
             );
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', array('id' => $tl_id));
         }
 
         return $this->render(
             'task/create.html.twig', [
-                'taskForm' => $form->createView()
+                'taskForm' => $form->createView(),
+                'tlid' => $tl_id,
             ]
         );
     }
@@ -133,7 +142,7 @@ class TaskController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function delete(Task $task, EntityManagerInterface $manager, Request $request): Response
+    public function delete(Task $task, EntityManagerInterface $manager, Request $request, $id): Response
     {
         $this->denyAccessUnlessGranted('DELETE', $task);
 
@@ -142,20 +151,42 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $lid = $task->getTasksList()->getId();
 
             $manager->remove($task);
-            $manager->flush();
 
+
+            $manager->flush();
             $this->addFlash(
                 'success',
                 'Task has been deleted.'
             );
 
-            return $this->redirectToRoute('task_list');
+
+            return $this->redirectToRoute('task_list', array('id' => $lid));
         }
 
+        $val = $form->createView();
+
         return $this->render('task/delete.html.twig', [
-            'taskForm' => $form->createView()
+            'taskForm' => $val,
+            'tlid' => $id,
         ]);
+    }
+
+    private function getList($id)
+    {
+        $lists = $product = $this->getDoctrine()
+            ->getRepository(TasksList::class)
+            ->find($id);
+        return $lists;
+    }
+
+    private function getTasksByListId($id)
+    {
+        $lists = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->findBy(array('tasksList' => $id));
+        return $lists;
     }
 }

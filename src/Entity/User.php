@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use function in_array;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -89,12 +92,12 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
-    
+
     /**
      * @ORM\Column(type="integer", options={"default":0})
      */
     private $validated;
-    
+
     /**
      * @ORM\Column(type="string", options={"default":"none"})
      */
@@ -149,7 +152,12 @@ class User implements UserInterface
      */
     private $tasks;
 
-    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TasksList", mappedBy="user")
+     */
+    private $tasksLists;
+
+
     /**
      * @return mixed
      */
@@ -170,13 +178,13 @@ class User implements UserInterface
     {
         return $this->validated;
     }
+
     public function checkValidated($val)
     {
         return $this->validated==$val;
     }
-    
 
-    
+
     public function setValidated($validated)
     {
         $this->validated = $validated;
@@ -185,13 +193,14 @@ class User implements UserInterface
     public function __construct()
     {
         $this->sex = "Female";
-        $this->birthdate = new \DateTime();
+        $this->birthdate = new DateTime();
         $this->validated = 0;
         $this->foto="none.jpg";
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
         $this->roles = ["ROLE_USER"];
         $this->tasks = new ArrayCollection();
+        $this->tasksLists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -278,24 +287,24 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -335,6 +344,37 @@ class User implements UserInterface
 
     public function isAdmin()
     {
-        return \in_array('ROLE_ADMIN', $this->getRoles());
+        return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    /**
+     * @return Collection|TasksList[]
+     */
+    public function getTasksLists(): Collection
+    {
+        return $this->tasksLists;
+    }
+
+    public function addTasksList(TasksList $tasksList): self
+    {
+        if (!$this->tasksLists->contains($tasksList)) {
+            $this->tasksLists[] = $tasksList;
+            $tasksList->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksList(TasksList $tasksList): self
+    {
+        if ($this->tasksLists->contains($tasksList)) {
+            $this->tasksLists->removeElement($tasksList);
+            // set the owning side to null (unless already changed)
+            if ($tasksList->getUser() === $this) {
+                $tasksList->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

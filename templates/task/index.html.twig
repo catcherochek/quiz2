@@ -18,10 +18,10 @@
         </div>
        <div class="text-center">
            <h1>To do-list</h1>
-           <p>You have <strong>{{ app.user.tasks | length }} tasks</strong>.</p>
+           <p>You have <strong>{{ tasks | length }} tasks</strong> in {{ list.name }} list</p>
        </div>
         <div class="mb-3">
-            <a href="{{ path('task_create') }}" class="btn btn-outline-dark">
+            <a href="{{ path('task_create',{'tl_id': list.id}) }}" class="btn btn-outline-dark">
                 Add a task
             </a>
         </div>

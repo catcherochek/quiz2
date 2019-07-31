@@ -5,9 +5,9 @@
         <h1 class="text-center">Remove a task</h1>
         <div class="row">
             <div class="col-12">
-                {% include 'task/taskForm.html.twig' %}
-                <button type="submit" class="btn btn-success">Remove</button>
-                <a href="{{ path('task_list',{ 'id' : tlid }) }}" class="btn btn-info">Delete</a>
+                {% include 'tasklist/tasklistForm.html.twig' %}
+                <button type="submit" class="btn btn-danger">Remove</button>
+                <a href="{{ path('tasklist') }}" class="btn btn-info">Back</a>
                 {{ form_end(taskForm) }}
             </div>
         </div>
